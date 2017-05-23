@@ -1,0 +1,11 @@
+[package]
+name = "svg-now"
+version = "0.1.0"
+authors = ["bombless"]
+
+[dependencies]
+
+
+
+[dependencies.svg]
+path = "../svg"
