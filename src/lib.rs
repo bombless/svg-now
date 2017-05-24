@@ -15,8 +15,8 @@ pub fn render((width, height): (u64, u64), events: Vec<svg::SvgEvent>) -> Vec<u8
             let height = view_box[3] - view_box[1];
             re_x1 = (x1 - view_box[0]) / width;
             re_x2 = (x2 - view_box[0]) / width;
-            re_y1 = (y1 - view_box[2]) / height;
-            re_y2 = (y2 - view_box[2]) / height;
+            re_y1 = (y1 - view_box[1]) / height;
+            re_y2 = (y2 - view_box[1]) / height;
         }
 
         for offset in 0 .. width * height {
@@ -26,19 +26,18 @@ pub fn render((width, height): (u64, u64), events: Vec<svg::SvgEvent>) -> Vec<u8
             let re_x = x as f64 / width as f64;
             let re_y = y as f64 / height as f64;
 
-            if distance((re_x1, re_y1, re_x2, re_y2), re_x, re_y) < 0.02 {
+            use distance::hit;
+
+            if hit((re_x1, re_y1, re_x2, re_y2), re_x, re_y) {
                 for i in 0 .. 3 {
                     canvas[4 * offset as usize + i] = 0
                 }
 				canvas[4 * offset as usize + 3] = 255
             }
-        }        
-
-        fn distance((x1, y1, x2, y2): (f64, f64, f64, f64), x0: f64, y0: f64) -> f64 {
-            fn square(x: f64) -> f64 { x * x }
-            f64::abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1) / f64::sqrt(square(y2 - y1) + square(x2 - x1))
         }
     }
 
     canvas
 }
+
+mod distance;
