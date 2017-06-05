@@ -3,12 +3,12 @@ extern crate rusttype;
 use self::rusttype::{FontCollection, Scale, point, PositionedGlyph};
 
 pub fn render((canvas_width, canvas_height): (u64, u64), content: &str, canvas: &mut [u8]) {
-    let font_data = include_bytes!("../Arial Unicode.ttf");
+    let font_data = include_bytes!("../emoji.ttf");
     let collection = FontCollection::from_bytes(&font_data[..]);
     let font = collection.into_font().unwrap(); // only succeeds if collection consists of one font
 
     // Desired font pixel height
-    let height: f32 = 12.4; // to get 80 chars across (fits most terminals); adjust as desired
+    let height: f32 = (canvas_height / 2) as _; // to get 80 chars across (fits most terminals); adjust as desired
     let _pixel_height = height.ceil() as usize;
 
     // 2x scale in x direction to counter the aspect ratio of monospace characters.
@@ -39,7 +39,12 @@ pub fn render((canvas_width, canvas_height): (u64, u64), content: &str, canvas: 
                 if x >= 0 && x < canvas_width as i32 && y >= 0 && y < canvas_height as i32 {
                     let x = x as usize;
                     let y = y as usize;
-                    canvas[(x + y * canvas_width as usize)] = (v * 256.0) as u8;
+                    let p = 4 * (x + y * canvas_width as usize);
+                    let gray_scale = (v * 256.0) as u8;
+                    canvas[p] = gray_scale;
+                    canvas[p + 1] = gray_scale;
+                    canvas[p + 2] = gray_scale;
+                    canvas[p + 3] = 255;
                 }
             })
         }
