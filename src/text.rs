@@ -40,13 +40,15 @@ pub fn render((canvas_width, canvas_height): (u64, u64), content: &str, canvas: 
                     let x = x as usize;
                     let y = y as usize;
                     let p = 4 * (x + y * canvas_width as usize);
-                    let gray_scale = (v * 256.0) as u8;
-                    canvas[p] = gray_scale;
-                    canvas[p + 1] = gray_scale;
-                    canvas[p + 2] = gray_scale;
-                    canvas[p + 3] = 255;
+                    let gray_scale = (256.0 - v * 256.0) as u8;
+                    if gray_scale > 0 {
+                        canvas[p] = gray_scale;
+                        canvas[p + 1] = gray_scale;
+                        canvas[p + 2] = gray_scale;
+                        canvas[p + 3] = 255;
+                    }
                 }
             })
         }
     }
- }
+}
