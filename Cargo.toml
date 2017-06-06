@@ -13,3 +13,4 @@ rusttype = "*"
 
 [dependencies.svg]
 path = "../svg"
+version = "0.4"
