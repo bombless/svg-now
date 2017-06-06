@@ -1,6 +1,6 @@
 [package]
 name = "svg-now"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["bombless"]
 
 [dependencies.sdl2]
