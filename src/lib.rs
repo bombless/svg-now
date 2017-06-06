@@ -53,7 +53,7 @@ pub fn render((width, height): (u64, u64), svg::SvgEvents { events, view_box }: 
 
                     re_r = r / avg;
                 }
-                let unit = 1. / f64::sqrt(width as f64 * height as f64);
+                
                 for offset in 0 .. width * height {
                     let x = offset % height;
                     let y = offset / height;
@@ -72,40 +72,6 @@ pub fn render((width, height): (u64, u64), svg::SvgEvents { events, view_box }: 
                         canvas[4 * offset as usize + 1] = fill.green;
                         canvas[4 * offset as usize + 2] = fill.blue;
                         canvas[4 * offset as usize + 3] = 255;
-                        //println!("#{} {}", f64::sqrt(-diff), unit);
-                    } else {
-                        let factor = (f64::sqrt(sq_distance) - re_r) / unit;
-                        if factor < 2. {
-                            let gray_scale = if factor >= 1.0 {
-                                0.1
-                            } else {
-                                1. / factor
-                            };
-
-                            let r_l = canvas[4 * offset as usize + 0] as f64 / 256.;
-                            let g_l = canvas[4 * offset as usize + 1] as f64 / 256.;
-                            let b_l = canvas[4 * offset as usize + 2] as f64 / 256.;
-                            let a_l = canvas[4 * offset as usize + 3] as f64 / 256.;
-
-                            let r_r = fill.red as f64 / 256.;
-                            let g_r = fill.green as f64 / 256.;
-                            let b_r = fill.blue as f64 / 256.;
-
-                            let out_a = a_l + gray_scale * (1. - r_l);
-
-                            if out_a > 0. {
-                                canvas[4 * offset as usize + 3] = (out_a * 256.) as u8;
-                                canvas[4 * offset as usize + 0] = ((r_l * a_l + r_r * gray_scale * (1. - a_l)) / out_a * 256.) as u8;
-                                canvas[4 * offset as usize + 1] = ((g_l * a_l + g_r * gray_scale * (1. - a_l)) / out_a * 256.) as u8;
-                                canvas[4 * offset as usize + 2] = ((b_l * a_l + b_r * gray_scale * (1. - a_l)) / out_a * 256.) as u8;
-                            }
-
-
-                            //canvas[4 * offset as usize + 3] = 255;
-                            //canvas[4 * offset as usize + 0] = 255;
-                            //canvas[4 * offset as usize + 1] = 0;
-                            //canvas[4 * offset as usize + 2] = 0;
-                        }
                     }
                 }
             }
